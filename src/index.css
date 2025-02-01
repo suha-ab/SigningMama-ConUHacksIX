@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 100% 97%;
+    --foreground: 20 40% 20%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 25 47% 31%;
+    --primary-foreground: 60 30% 96%;
+ 
+    --secondary: 0 0% 75%;
+    --secondary-foreground: 220 13% 46%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 0 85% 60%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 20 30% 85%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.5rem;
+  }
+}
+
+@layer utilities {
+  .animate-hover {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+}
+
+@layer components {
+  .game-section {
+    @apply h-screen p-6 flex flex-col gap-4;
+  }
+  
+  .stove-burner {
+    @apply w-24 h-24 rounded-full border-4 border-secondary bg-accent/80;
+  }
+  
+  .mixing-bowl {
+    @apply w-48 h-24 rounded-full bg-secondary border-2 border-primary/20 shadow-lg;
+  }
+}
