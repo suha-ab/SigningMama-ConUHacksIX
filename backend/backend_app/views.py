@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.cache import cache
 
 import cv2
 import numpy as np
@@ -30,6 +31,7 @@ def mediapipe_detection(image, model):
     return image, results
     
 def draw_landmarks(image, results):
+    
         mp_holistic = mp.solutions.holistic # Holistic model
         mp_drawing = mp.solutions.drawing_utils # Drawing utilities
         
@@ -40,7 +42,11 @@ def draw_landmarks(image, results):
     
 class recognitionModel(APIView):
  
-    def post(self, request):
+    #def post(self, request):
+    def get(self, request):
+        model_cache_key = 'model_cache'
+        model = cache.get(model_cache_key) # get model from cache
+        
         mp_holistic = mp.solutions.holistic # Holistic model
         mp_drawing = mp.solutions.drawing_utils # Drawing utilities
         
@@ -62,7 +68,12 @@ class recognitionModel(APIView):
         
         model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
         
-        model.load_weights('action.h5')
+        module_dir = os.path.dirname(__file__)  # get current directory
+        file_path = os.path.join(module_dir, 'action.h5')
+        
+        model.load_weights(file_path)
+        
+        cache.set(model_cache_key, model, None) # save in the cache
         
         # 1. New detection variables
         sequence = []
