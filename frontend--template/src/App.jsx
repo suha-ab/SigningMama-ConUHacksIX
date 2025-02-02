@@ -1,13 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ImageScreen from './components/ImageScreen'
 import InstructionBar from './components/InstructionBar'
 import Logo from './components/Logo'
 import TutorialVid from './components/TutorialVid'
 import UserCam from './components/UserCam'
 import './index.css'
+import axios from 'axios'
 
 export default function App() {
 var windowHeight = window.innerHeight;
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1/backend_app/recognitionModel');
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  fetchData();
+  console.log("called api")
+}, []);
 
   return (
     <div className="flex flex-col h-screen w-screen bg-amber-200 pl-0">
