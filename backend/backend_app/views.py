@@ -137,3 +137,7 @@ class recognitionModel(APIView):
                     break
             cap.release()
             cv2.destroyAllWindows()
+            
+class testBackend(APIView):
+    def post(self, request):
+        return Response({'prediction': 'test backend output'}, status=status.HTTP_200_OK)
