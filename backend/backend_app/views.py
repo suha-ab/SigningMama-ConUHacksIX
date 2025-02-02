@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.cache import cache
+import time
 
 import cv2
 import numpy as np
@@ -23,6 +24,10 @@ def extract_keypoints(results):
         return np.concatenate([pose, face, lh, rh])
 
 def mediapipe_detection(image, model):
+    if image is None:
+        raise ValueError('No image found')
+    else:
+        print("Yes!Image!!!!!!!!!!!!")
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # COLOR CONVERSION BGR 2 RGB
     image.flags.writeable = False                  # Image is no longer writeable
     results = model.process(image)                 # Make prediction
@@ -39,11 +44,37 @@ def draw_landmarks(image, results):
         mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS) # Draw pose connections
         mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS) # Draw left hand connections
         mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS) # Draw right hand connections
+
+def draw_styled_landmarks(image, results):
+
+    mp_holistic = mp.solutions.holistic # Holistic model
+    mp_drawing = mp.solutions.drawing_utils # Drawing utilities
+
+    # Draw face connections
+    mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION, 
+                             mp_drawing.DrawingSpec(color=(80,110,10), thickness=1, circle_radius=1), 
+                             mp_drawing.DrawingSpec(color=(80,256,121), thickness=1, circle_radius=1)
+                             ) 
+    # Draw pose connections
+    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS,
+                             mp_drawing.DrawingSpec(color=(80,22,10), thickness=2, circle_radius=4), 
+                             mp_drawing.DrawingSpec(color=(80,44,121), thickness=2, circle_radius=2)
+                             ) 
+    # Draw left hand connections
+    mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS, 
+                             mp_drawing.DrawingSpec(color=(121,22,76), thickness=2, circle_radius=4), 
+                             mp_drawing.DrawingSpec(color=(121,44,250), thickness=2, circle_radius=2)
+                             ) 
+    # Draw right hand connections  
+    mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS, 
+                             mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=4), 
+                             mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2)
+                             ) 
     
 class recognitionModel(APIView):
  
     #def post(self, request):
-    def get(self, request):
+    def post(self, request):
         model_cache_key = 'model_cache'
         model = cache.get(model_cache_key) # get model from cache
         
@@ -80,7 +111,15 @@ class recognitionModel(APIView):
         sentence = []
         threshold = 0.8
 
+
         cap = cv2.VideoCapture(0)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1024)
+        time.sleep(2)
+        cap.set(cv2.CAP_PROP_EXPOSURE, -8.0)
+        time.sleep(10)
+        # if not cap.isOpened():
+        #     return Response({'error': 'Webcam not accessible'}, status=status.HTTP_400_BAD_REQUEST)
         # Set mediapipe model 
         with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
             while cap.isOpened():
@@ -89,11 +128,15 @@ class recognitionModel(APIView):
                 ret, frame = cap.read()
 
                 # Make detections
-                image, results = mediapipe_detection(frame, holistic)
+                try:
+                    image, results = mediapipe_detection(frame, holistic)
+                except ValueError as e:
+                    print(e)
+                    continue
                 print(results)
                 
                 # Draw landmarks
-                #draw_styled_landmarks(image, results)
+                draw_styled_landmarks(image, results)
                 
                 # 2. Prediction logic
                 keypoints = extract_keypoints(results)
@@ -107,6 +150,10 @@ class recognitionModel(APIView):
                     res = model.predict(np.expand_dims(sequence, axis=0))[0]
                     print(actions[np.argmax(res)])
                 responsePrediction = actions[np.argmax(res)]
+                if cv2.waitKey(10) & 0xFF == ord('q'):
+                    break
+                cap.release()
+                cv2.destroyAllWindows()
 
                 return Response({'prediction': responsePrediction}, status=status.HTTP_200_OK)
 
@@ -133,10 +180,7 @@ class recognitionModel(APIView):
                 # cv2.imshow('OpenCV Feed', image)
 
                 # Break gracefully
-                if cv2.waitKey(10) & 0xFF == ord('q'):
-                    break
-            cap.release()
-            cv2.destroyAllWindows()
+
             
 class testBackend(APIView):
     def post(self, request):

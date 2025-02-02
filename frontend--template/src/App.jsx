@@ -13,14 +13,13 @@ var windowHeight = window.innerHeight;
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1/backend_app/recognitionModel');
+      const response = await axios.post('http://127.0.0.1:8000/backend_app/recognitionModel');
       console.log(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-
-  fetchData();
+    fetchData();
   console.log("called api")
 }, []);
 
@@ -35,7 +34,7 @@ useEffect(() => {
       <div className='flex-grow flex items-start justify-center relative mt-25'>
       <ImageScreen urlID={4} className="z-0"/>
       <div className='absolute bottom-0 left-0 z-10 '>
-      <UserCam className="z-1"/>
+      {/* <UserCam className="z-1"/> */}
       </div>
       <div className='absolute bottom-0 right-0 z-10'>  
       <TutorialVid className="z-1" />

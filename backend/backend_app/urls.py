@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import recognitionModel
+from .views import recognitionModel,testBackend
 
 urlpatterns = [
     path('recognitionModel', recognitionModel.as_view(), name="recognitionModel"),
-    path('testBackend', recognitionModel.as_view(), name="testBackend"),
+    path('testBackend', testBackend.as_view(), name="testBackend"),
 ]
 
