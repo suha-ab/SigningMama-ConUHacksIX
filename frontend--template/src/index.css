@@ -3,6 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Daydream";
+  src: local("Daydream"),
+   url("./fonts/Daydream.ttf") format("truetype");
+}
+
+* {
+  font-family: 'Daydream';
+}
+
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
