@@ -4,13 +4,15 @@ import InstructionBar from './components/InstructionBar'
 import Logo from './components/Logo'
 import TutorialVid from './components/TutorialVid'
 import UserCam from './components/UserCam'
-import './App.css'
+import './index.css'
 
 export default function App() {
 
 
   return (
+    <div className="bg-blue-500">
     <ImageScreen />
+    </div>
 
   )
 }
