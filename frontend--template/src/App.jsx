@@ -13,6 +13,7 @@ export default function App() {
     <div className="bg-blue-500">
     <ImageScreen />
     <UserCam/>
+    <TutorialVid/>
     </div>
 
   )

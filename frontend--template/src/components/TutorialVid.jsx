@@ -1,5 +1,6 @@
+import crackTut from '../assets/crackTutorial.gif'
 export default function TutorialVid() {
     return(
-        <div className="bg-black w-16 h-16"></div>
+        <img src={crackTut} alt="crack..." />
     )
 }
