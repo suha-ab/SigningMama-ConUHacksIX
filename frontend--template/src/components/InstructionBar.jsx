@@ -1,7 +1,10 @@
 export default function InstructionBar() {
-    const instructions = ["crack the eggs", "mix the eggs in a bowl", "pour the eggs into the pan", "cook the eggs"];
+    const firstword = ["crack", "mix", "pour", "cook"];
+    const instructions = [" the eggs", " the eggs in a bowl", " the eggs into the pan", " the eggs"];
 
     return(
-        <div className="bg-white">{instructions[0]}</div>
+        <div className="rounded-lg bg-white text-4xl">
+            <span className="text-red-500">{firstword[0]}</span>{instructions[0]}
+        </div>
     )
 }

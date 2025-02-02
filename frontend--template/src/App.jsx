@@ -10,21 +10,22 @@ export default function App() {
 var windowHeight = window.innerHeight;
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[url('./assets/1-initial-state.png')] pl-0">
-      <div className="flex flex-col items-center"> 
-      <Logo className="z-0"/>
-      <InstructionBar className="z-0" />
+    <div className="flex flex-col h-screen w-screen bg-amber-200 pl-0">
+      <div className="flex flex-row justify-between items-center"> 
+      <Logo className="ml-auto z-0"/>
+      <div className='pt-5 flex-grow flex justify-center items-center'>
+        <InstructionBar className="z-0 m-10" />
       </div>
-      <div className='flex-grow flex items-center justify-center relative'>
-      <ImageScreen className="z-0"/>
-      <div className='absolute bottom-0 left-0 z-10'>
-      {/* <UserCam className="z-1"/> */}
       </div>
-      <div className='absolute bottom-0 right-0 z-10'>
+      <div className='flex-grow flex items-start justify-center relative mt-25'>
+      <ImageScreen urlID={4} className="z-0"/>
+      <div className='absolute bottom-0 left-0 z-10 '>
+      <UserCam className="z-1"/>
+      </div>
+      <div className='absolute bottom-0 right-0 z-10'>  
       <TutorialVid className="z-1" />
       </div>
       </div>
     </div>
-
   )
 }

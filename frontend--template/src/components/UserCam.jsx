@@ -4,7 +4,7 @@ import "../App.css";
 
 function UserCam() {
   return (
-    <div className="App">
+    <div className="w-100 h-auto App">
       <Webcam />
     </div>
   );
