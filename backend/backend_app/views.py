@@ -112,7 +112,14 @@ class recognitionModel(APIView):
         threshold = 0.8
 
 
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(-1)
+
+        # # Check cam open
+        # if not cap.isOpened():
+        #     console.log("Unable to open camera")
+        #     return Response({'error': 'Webcam not accessible'}, status=status.HTTP_400_BAD_REQUEST)
+        # time.sleep(5) # Camera warmup time
+
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1024)
         time.sleep(2)
